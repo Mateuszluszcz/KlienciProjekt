@@ -1,0 +1,54 @@
+﻿@model List<WebApplication2.Models.Klienci>
+
+<h2>Lista klientów</h2>
+<p>
+    <a href="@Url.Action("Create", "Home")">Dodaj nowego klienta</a>
+</>p
+
+<p>
+    <a href="@Url.Action("Edit", "Home")">Edytuj klienta</a>
+    </>p
+
+@if (Model == null || !Model.Any())
+{
+    <p>Brak danych.</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Imię</th>
+                <th>Nazwisko</th>
+                <th>PESEL</th>
+                <th>Rok urodzenia</th>
+                <th>Płeć</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var klient in Model)
+            {
+                <tr>
+                    <td>@klient.ID</td>
+                    <td>@klient.Name</td>
+                    <td>@klient.Surname</td>
+                    <td>@klient.PESEL</td>
+                    <td>@klient.BirthYear</td>
+                    <td>@klient.Płec</td>
+
+                    <td>
+                        <a asp-action="Edit"
+                        asp-route-id ="@klient.ID">Edytuj</a>
+
+                    </td>
+
+                    <td>
+                        <a asp-action="Delete"
+                        asp-route-id ="@klient.ID">Usuń</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

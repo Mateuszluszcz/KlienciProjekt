@@ -1,0 +1,26 @@
+﻿@model WebApplication2.Models.Klienci
+
+<h2>Dodaj klienta</h2>
+
+<form asp-action="Create" method="post">
+    @Html.AntiForgeryToken()
+
+    <div>
+        <label asp-for="Name"></label>
+        <input asp-for="Name" autocomplete="given-name" />
+    </div>
+    <div>
+        <label asp-for="Surname"></label>
+        <input asp-for="Surname" autocomplete="family-name" />
+    </div>
+    <div>
+        <label asp-for="PESEL"></label>
+        <input asp-for="PESEL" autocomplete="on" />
+    </div>
+
+    <button type="submit">Dodaj klienta</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
