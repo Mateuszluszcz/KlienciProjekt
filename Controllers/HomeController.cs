@@ -43,51 +43,7 @@ namespace WebApplication2.Controllers
         {
             return View();
         }
-        //[HttpGet]
-        //public IActionResult Create()
-        //{
-        //	return View();
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Create(Klienci klient)
-        //{
-        //	if (ModelState.IsValid)
-        //	{
-        //		if (klient.PESEL.Length != 11 || !klient.PESEL.All(char.IsDigit))
-        //		{
-        //			ModelState.AddModelError("PESEL", "PESEL musi zawieraæ 11 cyfr.");
-        //			return View(klient);
-        //		}
-
-        //		int rok = int.Parse(klient.PESEL.Substring(0, 2));
-        //		int miesiac = int.Parse(klient.PESEL.Substring(2, 2));
-
-        //		if (miesiac >= 1 && miesiac <= 12)
-        //		{
-        //			klient.BirthYear = 1900 + rok;
-        //		}
-        //		else if (miesiac >= 21 && miesiac <= 32)
-        //		{
-        //			klient.BirthYear = 2000 + rok;
-        //		}
-        //		else
-        //		{
-        //			ModelState.AddModelError("PESEL", "Niepoprawny miesi¹c w PESEL.");
-        //			return View(klient);
-        //		}
-
-        //		int p³ecCyfra = int.Parse(klient.PESEL.Substring(9, 1));
-        //		klient.P³ec = (p³ecCyfra % 2 == 1) ? 1 : 0;
-
-        //		_context.Klienci.Add(klient);
-        //		await _context.SaveChangesAsync();
-
-        //		return RedirectToAction(nameof(Index));
-        //	}
-        //	return View(klient);
-        //}
+      
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Klienci klient)
@@ -181,9 +137,29 @@ namespace WebApplication2.Controllers
             klient.Name = model.Name;
             klient.Surname = model.Surname;
             klient.PESEL = model.PESEL;
-            klient.BirthYear = model.BirthYear;
-            klient.P³ec = model.P³ec;
+            if (klient.PESEL.Length >= 11)
+            {
+                var yearPart = klient.PESEL.Substring(0, 2);
+                var monthPart = klient.PESEL.Substring(2, 2);
+                var genderDigit = int.Parse(klient.PESEL.Substring(9, 1));
 
+                int year = int.Parse(yearPart);
+                int month = int.Parse(monthPart);
+
+                if (month >= 1 && month <= 12)
+                    year += 1900;
+                else if (month >= 21 && month <= 32)
+                    year += 2000;
+
+
+                klient.BirthYear = year;
+                klient.P³ec = (genderDigit % 2 == 0) ? 0 : 1;
+            }
+
+            _context.Klienci.Update(klient);
+            _context.SaveChanges();
+
+            //return RedirectToAction("Index");
             await _context.SaveChangesAsync();
 
             return RedirectToAction(nameof(Index));
