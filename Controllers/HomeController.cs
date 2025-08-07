@@ -71,8 +71,17 @@ namespace WebApplication2.Controllers
                 klient.BirthYear = year;
                 klient.P³ec = (genderDigit % 2 == 0) ? 0 : 1;
             }
+            else
+            {
 
-            _context.Klienci.Add(klient);
+                ModelState.AddModelError("PESEL", "PESEL must be at least 11 characters long.");
+                return View(klient);
+            }
+
+
+
+
+                _context.Klienci.Add(klient);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -155,8 +164,16 @@ namespace WebApplication2.Controllers
                 klient.BirthYear = year;
                 klient.P³ec = (genderDigit % 2 == 0) ? 0 : 1;
             }
+            else
+            {
 
-            _context.Klienci.Update(klient);
+                ModelState.AddModelError("PESEL", "PESEL must be at least 11 characters long.");
+                return View(model);
+            }
+
+
+
+                _context.Klienci.Update(klient);
             _context.SaveChanges();
 
             //return RedirectToAction("Index");
