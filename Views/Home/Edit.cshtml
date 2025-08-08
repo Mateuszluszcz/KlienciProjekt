@@ -1,23 +1,22 @@
 ﻿@model WebApplication2.Models.Klienci
 
-<h2>Edytuj dane klienta</h2>
-
+<h2 class="mb-2 text-left" style="padding-bottom:30px;"> Edytuj dane klienta</h2>
 <form asp-action="Edit" method="post">
     <input type="hidden" aps-for="ID"/>
-    <div>
-        <label asp-for="Name"></label>
-        <input asp-for="Name" />
+    <div class ="mb-3 d-flex align-items-center">
+        <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;"></label>
+        <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" />
     </div>
-    <div>
-        <label asp-for="Surname"></label>
-        <input asp-for="Surname" />
+    <div class="mb-3 d-flex align-items-center">
+        <label asp-for="Surname" class=mb-3 style="width:75px; padding-top:10px;"></label>
+        <input asp-for="Surname" class="form-control" style="width:300px; " autocomplete="given-name" />
     </div>
-    <div>
-        <label asp-for="PESEL"></label>
-        <input asp-for="PESEL" />
+    <div class="mb-3 d-flex align-items-center">
+        <label asp-for="PESEL" class=mb-3 style="width:75px; padding-top:10px;"></label>
+        <input asp-for="PESEL" class="form-control" style="width:300px; " autocomplete="given-name" />
     </div>
     
-    <button type="submit">Dodaj klienta</button>
+    <button type="submit" class="btn btn-success" >Zapisz zmiany</button>
 </form>
 
 @section Scripts {
