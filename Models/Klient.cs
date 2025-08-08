@@ -14,19 +14,19 @@ namespace WebApplication2.Models
 
        
 
-		[DisplayName("Name")]
+		[DisplayName("Imię")]
 		public string Name { get; set; } = "";
 
-		[DisplayName("Surname")]
+		[DisplayName("Nazwisko")]
 		public string Surname { get; set; } = "";
 
 		[DisplayName("PESEL")]
 		public string PESEL { get; set; } = "";
 
-		[DisplayName("BirthYear")]
+		[DisplayName("Rok Urodzenia")]
 		public int BirthYear { get; set; }
 
-		[DisplayName("Płec")]
+		[DisplayName("Płeć")]
 		public int Płec { get; set; }
 
 
