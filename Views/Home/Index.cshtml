@@ -2,14 +2,18 @@
 
 <h2 class="mb-2 text-left" style="padding-bottom:30px;"> Lista klientów</h2>
 
+
+
 <div>
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3"
 
 <p>
     <a href="@Url.Action("Create", "Home")" class=" btn btn-success"> Dodaj nowego klienta</a>
-</div> 
-   
+            <a href="@Url.Action("ImportExport", "Home")" class="btn btn-info mb-3;padding-top:10px;">Import / Export klientów</a>
+
+</div>
+
 
 
 @if (Model == null || !Model.Any())
