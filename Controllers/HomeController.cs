@@ -71,7 +71,7 @@ namespace WebApplication2.Controllers
 
 
                 klient.BirthYear = year;
-                klient.P³ec = (genderDigit % 2 == 0) ? 0 : 1;
+                klient.PÅ‚ec = (genderDigit % 2 == 0) ? 0 : 1;
             }
             else
             {
@@ -164,7 +164,7 @@ namespace WebApplication2.Controllers
 
 
                 klient.BirthYear = year;
-                klient.P³ec = (genderDigit % 2 == 0) ? 0 : 1;
+                klient.PÅ‚ec = (genderDigit % 2 == 0) ? 0 : 1;
             }
             else
             {
@@ -233,7 +233,7 @@ namespace WebApplication2.Controllers
                             Surname = row.Cell(2).GetValue<string>(),
                             PESEL = row.Cell(3).GetValue<string>(),
                             BirthYear = row.Cell(4).GetValue<int>(),
-                            P³ec = row.Cell(5).GetValue<int>()
+                            PÅ‚ec = row.Cell(5).GetValue<int>()
                         });
                     }
                 }
@@ -254,7 +254,7 @@ namespace WebApplication2.Controllers
                                 Surname = values[1].Trim(),
                                 PESEL = values[2].Trim(),
                                 BirthYear = int.Parse(values[3]),
-                                P³ec = int.Parse(values[4])
+                                PÅ‚ec = int.Parse(values[4])
                             });
                         }
                     }
@@ -281,7 +281,7 @@ namespace WebApplication2.Controllers
                 ws.Cell(1, 2).Value = "Surname";
                 ws.Cell(1, 3).Value = "PESEL";
                 ws.Cell(1, 4).Value = "BirthYear";
-                ws.Cell(1, 5).Value = "P³ec";
+                ws.Cell(1, 5).Value = "PÅ‚ec";
 
                 for (int i = 0; i < clients.Count; i++)
                 {
@@ -289,7 +289,7 @@ namespace WebApplication2.Controllers
                     ws.Cell(i + 2, 2).Value = clients[i].Surname;
                     ws.Cell(i + 2, 3).Value = clients[i].PESEL;
                     ws.Cell(i + 2, 4).Value = clients[i].BirthYear;
-                    ws.Cell(i + 2, 5).Value = clients[i].P³ec;
+                    ws.Cell(i + 2, 5).Value = clients[i].PÅ‚ec;
                 }
 
                 using var stream = new MemoryStream();
@@ -301,11 +301,11 @@ namespace WebApplication2.Controllers
             else if (fileType == "csv")
             {
                 var sb = new StringBuilder();
-                sb.AppendLine("Name,Surname,PESEL,BirthYear,P³ec");
+                sb.AppendLine("Name,Surname,PESEL,BirthYear,PÅ‚ec");
 
                 foreach (var c in clients)
                 {
-                    sb.AppendLine($"{c.Name},{c.Surname},{c.PESEL},{c.BirthYear},{c.P³ec}");
+                    sb.AppendLine($"{c.Name},{c.Surname},{c.PESEL},{c.BirthYear},{c.PÅ‚ec}");
                 }
 
                 return File(Encoding.UTF8.GetBytes(sb.ToString()), "text/csv", "klienci.csv");
