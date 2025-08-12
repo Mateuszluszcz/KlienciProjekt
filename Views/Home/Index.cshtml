@@ -16,60 +16,63 @@
 
 
 
-@if (Model == null || !Model.Any())
-{
-    <p>Brak danych.</p>
-}
-else
-{
+        @if (Model == null || !Model.Any())
 
-    <table class="tabel table-bordered table-hover">
-        <thead>
-            
-            <tr>
-                
-                <th style="width: 5%" class="text-center">ID</th>
-                <th style="width: 15%" class="text-center">Imię</th>
-                <th style="width: 15%" class="text-center">Nazwisko</th>
-                <th style="width: 20%" class="text-center">PESEL</th>
-                <th style="width: 15%" class="text-center">Rok urodzenia</th>
-                <th style="width: 10%" class="text-center">Płeć</th>
-                <th></th>
+        {
+            <p>Brak danych.</p>
+        }
+
+        else
+
+        {
+
+            <table class="tabel table-bordered table-hover">
+                <thead>
+
+                    <tr>
+
+                        <th style="width: 5%" class="text-center">ID</th>
+                        <th style="width: 15%" class="text-center">Imię</th>
+                        <th style="width: 15%" class="text-center">Nazwisko</th>
+                        <th style="width: 20%" class="text-center">PESEL</th>
+                        <th style="width: 15%" class="text-center">Rok urodzenia</th>
+                        <th style="width: 10%" class="text-center">Płeć</th>
+                        <th></th>
                         <th></th>
 
-                
-            </tr>
-            
-        </thead>
-        <tbody>
-            @foreach (var klient in Model)
-            {   
-               
-                <tr>
-                    <td class="text-center"> @klient.ID</td>
-                    <td class="text-center"> @klient.Name</td>
-                    <td class="text-center"> @klient.Surname</td>
-                    <td class="text-center"> @klient.PESEL</td>
-                    <td class="text-center"> @klient.BirthYear</td>
-                    <td class="text-center"> @klient.Płec</td>
 
-                    <td>
-                        
-                     <a asp-action="Edit"
-                        asp-route-id ="@klient.ID"
-                                class ="btn btn-sm btn-outline-warning">Edytuj</a>
+                    </tr>
 
-                    </td>
+                </thead>
+                <tbody>
+                    @foreach (var klient in Model)
+                    {
 
-                    <td>
-                        <a asp-action="Delete"
-                        asp-route-id ="@klient.ID"
-                        class ="btn btn-sm btn-outline-danger">Usuń</a>
-                    </td>
-                   
-                </tr>
-                 
-            }
-        </tbody>
-    </table>
-}
+                        <tr>
+                            <td class="text-center"> @klient.ID</td>
+                            <td class="text-center"> @klient.Name</td>
+                            <td class="text-center"> @klient.Surname</td>
+                            <td class="text-center"> @klient.PESEL</td>
+                            <td class="text-center"> @klient.BirthYear</td>
+                            <td class="text-center"> @klient.Płec</td>
+
+                            <td>
+
+                                <a asp-action="Edit"
+                                   asp-route-id="@klient.ID"
+                                   class="btn btn-sm btn-outline-warning">Edytuj</a>
+
+                            </td>
+
+                            <td>
+                                <a asp-action="Delete"
+                                   asp-route-id="@klient.ID"
+                                   class="btn btn-sm btn-outline-danger">Usuń</a>
+                            </td>
+
+                        </tr>
+
+                    }
+                </tbody>
+            </table>
+        }

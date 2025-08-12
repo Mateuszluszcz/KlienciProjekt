@@ -45,7 +45,7 @@ namespace WebApplication2.Controllers
         {
             return View();
         }
-      
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public IActionResult Create(Klienci klient)
@@ -83,7 +83,7 @@ namespace WebApplication2.Controllers
 
 
 
-                _context.Klienci.Add(klient);
+            _context.Klienci.Add(klient);
             _context.SaveChanges();
 
             return RedirectToAction("Index");
@@ -127,7 +127,7 @@ namespace WebApplication2.Controllers
             return View(klient);
         }
 
-       
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, Klienci model)
@@ -175,7 +175,7 @@ namespace WebApplication2.Controllers
 
 
 
-                _context.Klienci.Update(klient);
+            _context.Klienci.Update(klient);
             _context.SaveChanges();
 
             //return RedirectToAction("Index");
@@ -190,8 +190,8 @@ namespace WebApplication2.Controllers
         }
         public async Task<IActionResult> Delete(int id)
         {
-            
-           var klient = await _context.Klienci.FindAsync(id);
+
+            var klient = await _context.Klienci.FindAsync(id);
             if (klient != null)
             {
                 _context.Klienci.Remove(klient);
@@ -320,9 +320,9 @@ namespace WebApplication2.Controllers
         //    var klienci = await _context.Klienci.OrderBy(k =>k.ID).ToListAsync();
         //}
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }

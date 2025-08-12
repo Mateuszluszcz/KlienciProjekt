@@ -1,28 +1,28 @@
 ﻿@model WebApplication2.Models.Klienci
 
 <div>
-    
-<h2 class="mb-2 text-left" style="padding-bottom:30px;" > Dodaj klienta</h2>
 
-<form asp-action="Create" method="post">
-    @Html.AntiForgeryToken()
-    
-    <div class="mb-3 d-flex align-items-center">
-        <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;" > </label>
-        <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" />
-    </div>
-    <div class="mb-3 d-flex align-items-center" >
-        <label asp-for="Surname" class=mb-3 style="width:75px; padding-top:10px;" > </label>
-        <input asp-for="Surname" class="form-control" style="width:300px;" autocomplete="family-name" />
-    </div>
-    <div class="mb-3 d-flex align-items-center" >
-        <label asp-for="PESEL" class=mb-3 style="width:75px; padding-top:10px;" ></label>
-        <input asp-for="PESEL" class="form-control" style="width:300px;" autocomplete="on" />
-    </div>
+    <h2 class="mb-2 text-left" style="padding-bottom:30px;"> Dodaj klienta</h2>
 
-    <button type="submit" class="btn btn-success" >Dodaj nowego klienta</button>
-</form>
+    <form asp-action="Create" method="post">
+        @Html.AntiForgeryToken()
 
-@section Scripts {
-    <partial name="_ValidationScriptsPartial" />
-}
+        <div class="mb-3 d-flex align-items-center">
+            <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;"> </label>
+            <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" />
+        </div>
+        <div class="mb-3 d-flex align-items-center">
+            <label asp-for="Surname" class=mb-3 style="width:75px; padding-top:10px;"> </label>
+            <input asp-for="Surname" class="form-control" style="width:300px;" autocomplete="family-name" />
+        </div>
+        <div class="mb-3 d-flex align-items-center">
+            <label asp-for="PESEL" class=mb-3 style="width:75px; padding-top:10px;"></label>
+            <input asp-for="PESEL" class="form-control" style="width:300px;" autocomplete="on" />
+        </div>
+
+        <button type="submit" class="btn btn-success">Dodaj nowego klienta</button>
+    </form>
+
+    @section Scripts {
+        <partial name="_ValidationScriptsPartial" />
+    }

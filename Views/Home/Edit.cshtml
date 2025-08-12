@@ -2,8 +2,8 @@
 
 <h2 class="mb-2 text-left" style="padding-bottom:30px;"> Edytuj dane klienta</h2>
 <form asp-action="Edit" method="post">
-    <input type="hidden" aps-for="ID"/>
-    <div class ="mb-3 d-flex align-items-center">
+    <input type="hidden" aps-for="ID" />
+    <div class="mb-3 d-flex align-items-center">
         <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;"></label>
         <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" />
     </div>
@@ -15,8 +15,8 @@
         <label asp-for="PESEL" class=mb-3 style="width:75px; padding-top:10px;"></label>
         <input asp-for="PESEL" class="form-control" style="width:300px; " autocomplete="given-name" />
     </div>
-    
-    <button type="submit" class="btn btn-success" >Zapisz zmiany</button>
+
+    <button type="submit" class="btn btn-success">Zapisz zmiany</button>
 </form>
 
 @section Scripts {

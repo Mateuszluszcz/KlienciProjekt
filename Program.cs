@@ -1,5 +1,5 @@
 using Microsoft.EntityFrameworkCore;
-using WebApplication2.Models; 
+using WebApplication2.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,18 +7,12 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseNpgsql(builder.Configuration.GetConnectionString("PostgresConnection"))
-);
+//options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+options.UseNpgsql("Host=localhost;Database=test2;Username=postgres;Password=123"));
 
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate(); 
-}
 
 if (!app.Environment.IsDevelopment())
 {
