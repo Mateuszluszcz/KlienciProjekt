@@ -8,6 +8,7 @@ using PESEL.Validators.Impl;
 using System.Reflection.Metadata.Ecma335;
 using ClosedXML.Excel;
 using System.Text;
+using System.ComponentModel.DataAnnotations;
 
 namespace WebApplication2.Controllers
 {
@@ -46,75 +47,89 @@ namespace WebApplication2.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Create(Klienci klient)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(klient);
-            }
+		private bool TryParsePesel(string pesel, out int birthYear, out int gender)
+		{
+			birthYear = 0;
+			gender = 0;
 
-            if (klient.PESEL.Length >= 11)
-            {
-                var yearPart = klient.PESEL.Substring(0, 2);
-                var monthPart = klient.PESEL.Substring(2, 2);
-                var genderDigit = int.Parse(klient.PESEL.Substring(9, 1));
+			if (string.IsNullOrEmpty(pesel) || pesel.Length != 11 || !pesel.All(char.IsDigit))
+				return false;
 
-                int year = int.Parse(yearPart);
-                int month = int.Parse(monthPart);
+			int[] weights = { 1, 3, 7, 9, 1, 3, 7, 9, 1, 3 };
+			int sum = 0;
+			for (int i = 0; i < 10; i++)
+				sum += weights[i] * (pesel[i] - '0');
+			int control = (10 - (sum % 10)) % 10;
+			if (control != (pesel[10] - '0'))
+				return false;
 
-                if (month >= 1 && month <= 12)
-                    year += 1900;
-                else if (month >= 21 && month <= 32)
-                    year += 2000;
+			int yearPart = int.Parse(pesel.Substring(0, 2));
+			int monthPart = int.Parse(pesel.Substring(2, 2));
+			int month = monthPart;
 
+			if (month >= 1 && month <= 12)
+				birthYear = 1900 + yearPart;
+			else if (month >= 21 && month <= 32)
+			{
+				birthYear = 2000 + yearPart;
+				month -= 20;
+			}
+			else
+			{
+				return false;
+			}
 
-                klient.BirthYear = year;
-                klient.Płec = (genderDigit % 2 == 0) ? 0 : 1;
+			int genderDigit = int.Parse(pesel.Substring(9, 1));
+			gender = (genderDigit % 2 == 0) ? 0 : 1;
 
-               
-            }
-            else
-            {
-
-                ModelState.AddModelError("PESEL", "PESEL must be at least 11 characters long.");
-                return View(klient);
-            }
-
-
-
-
-            _context.Klienci.Add(klient);
-            _context.SaveChanges();
-
-            return RedirectToAction("Index");
-        }
+			return true;
+		}
 
 
 
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Create(Klienci klient)
+		{
+			if (!ModelState.IsValid)
+				return View(klient);
+
+			if (!TryParsePesel(klient.PESEL, out int birthYear, out int gender))
+			{
+				ModelState.AddModelError("PESEL", "Numer PESEL jest nieprawidłowy");
+				return View(klient);
+			}
+
+			klient.BirthYear = birthYear;
+			klient.Płec = gender;
+
+			_context.Klienci.Add(klient);
+			_context.SaveChanges();
+
+			return RedirectToAction("Index");
+		}
 
 
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
+		//[HttpPost]
+		//[ValidateAntiForgeryToken]
 
-        //public async Task<IActionResult> Edit(Klienci klient)
-        //{
-        //	if (ModelState.IsValid)
-        //	{
-        //		_context.Klienci.Update(klient); 
-        //		await _context.SaveChangesAsync();
-        //		return RedirectToAction(nameof(Index));
-        //	}
-        //	return View(klient);
-        //}
-        // POST: Movies/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int? id)
+		//public async Task<IActionResult> Edit(Klienci klient)
+		//{
+		//	if (ModelState.IsValid)
+		//	{
+		//		_context.Klienci.Update(klient); 
+		//		await _context.SaveChangesAsync();
+		//		return RedirectToAction(nameof(Index));
+		//	}
+		//	return View(klient);
+		//}
+		// POST: Movies/Edit/5
+		// To protect from overposting attacks, enable the specific properties you want to bind to.
+		// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+		//[HttpPost]
+		//[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
             {
@@ -130,63 +145,38 @@ namespace WebApplication2.Controllers
         }
 
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Klienci model)
-        {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public async Task<IActionResult> Edit(int id, Klienci model)
+		{
+			if (!ModelState.IsValid)
+				return View(model);
 
-            var klient = await _context.Klienci.FindAsync(id);
+			var klient = await _context.Klienci.FindAsync(id);
+			if (klient == null)
+				return NotFound();
 
-            if (klient == null)
-            {
-                return NotFound();
-            }
+			klient.Name = model.Name;
+			klient.Surname = model.Surname;
+			klient.PESEL = model.PESEL;
 
+			if (!TryParsePesel(klient.PESEL, out int birthYear, out int gender))
+			{
+				ModelState.AddModelError("PESEL", "Numer PESEL jest nieprawidłowy");
+				return View(model);
+			}
 
-            klient.Name = model.Name;
-            klient.Surname = model.Surname;
-            klient.PESEL = model.PESEL;
-            if (klient.PESEL.Length >= 11)
-            {
-                var yearPart = klient.PESEL.Substring(0, 2);
-                var monthPart = klient.PESEL.Substring(2, 2);
-                var genderDigit = int.Parse(klient.PESEL.Substring(9, 1));
+			klient.BirthYear = birthYear;
+			klient.Płec = gender;
 
-                int year = int.Parse(yearPart);
-                int month = int.Parse(monthPart);
+			_context.Klienci.Update(klient);
+			await _context.SaveChangesAsync();
 
-                if (month >= 1 && month <= 12)
-                    year += 1900;
-                else if (month >= 21 && month <= 32)
-                    year += 2000;
+			return RedirectToAction(nameof(Index));
+		}
 
 
-                klient.BirthYear = year;
-                klient.Płec = (genderDigit % 2 == 0) ? 0 : 1;
-            }
-            else
-            {
-
-                ModelState.AddModelError("PESEL", "PESEL must be at least 11 characters long.");
-                return View(model);
-            }
-
-
-
-            _context.Klienci.Update(klient);
-            _context.SaveChanges();
-
-            //return RedirectToAction("Index");
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool KlientExists(int id)
+		private bool KlientExists(int id)
         {
             return _context.Klienci.Any(e => e.ID == id);
         }
