@@ -231,17 +231,29 @@ namespace WebApplication2.Controllers
 						if (!TryParsePesel(pesel, out int birthYear, out int gender))
 						{
 							invalidClients.Add($"{row.Cell(1).GetValue<string>()} {row.Cell(2).GetValue<string>()} - PESEL niepoprawny");
-							continue; 
+							continue;
 						}
 
-						clients.Add(new Klienci
+						var existingClient = await _context.Klienci.FirstOrDefaultAsync(c => c.PESEL == pesel);
+						if (existingClient != null)
 						{
-							Name = row.Cell(1).GetValue<string>(),
-							Surname = row.Cell(2).GetValue<string>(),
-							PESEL = pesel,
-							BirthYear = birthYear,
-							Płec = gender
-						});
+							existingClient.Name = row.Cell(1).GetValue<string>();
+							existingClient.Surname = row.Cell(2).GetValue<string>();
+							existingClient.BirthYear = birthYear;
+							existingClient.Płec = gender;
+							_context.Klienci.Update(existingClient);
+						}
+						else
+						{
+							clients.Add(new Klienci
+							{
+								Name = row.Cell(1).GetValue<string>(),
+								Surname = row.Cell(2).GetValue<string>(),
+								PESEL = pesel,
+								BirthYear = birthYear,
+								Płec = gender
+							});
+						}
 					}
 				}
 				else if (fileType == "csv")
@@ -259,17 +271,29 @@ namespace WebApplication2.Controllers
 							if (!TryParsePesel(pesel, out int birthYear, out int gender))
 							{
 								invalidClients.Add($"{values[0].Trim()} {values[1].Trim()} - PESEL niepoprawny");
-								continue; 
+								continue;
 							}
 
-							clients.Add(new Klienci
+							var existingClient = await _context.Klienci.FirstOrDefaultAsync(c => c.PESEL == pesel);
+							if (existingClient != null)
 							{
-								Name = values[0].Trim(),
-								Surname = values[1].Trim(),
-								PESEL = pesel,
-								BirthYear = birthYear,
-								Płec = gender
-							});
+								existingClient.Name = values[0].Trim();
+								existingClient.Surname = values[1].Trim();
+								existingClient.BirthYear = birthYear;
+								existingClient.Płec = gender;
+								_context.Klienci.Update(existingClient);
+							}
+							else
+							{
+								clients.Add(new Klienci
+								{
+									Name = values[0].Trim(),
+									Surname = values[1].Trim(),
+									PESEL = pesel,
+									BirthYear = birthYear,
+									Płec = gender
+								});
+							}
 						}
 					}
 				}
@@ -278,8 +302,9 @@ namespace WebApplication2.Controllers
 			if (clients.Count > 0)
 			{
 				_context.Klienci.AddRange(clients);
-				await _context.SaveChangesAsync();
 			}
+
+			await _context.SaveChangesAsync();
 
 			if (invalidClients.Count > 0)
 			{
@@ -288,6 +313,7 @@ namespace WebApplication2.Controllers
 
 			return RedirectToAction("Index");
 		}
+
 
 
 		[HttpGet]
