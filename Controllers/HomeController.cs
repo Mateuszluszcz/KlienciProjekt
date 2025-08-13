@@ -72,6 +72,8 @@ namespace WebApplication2.Controllers
 
                 klient.BirthYear = year;
                 klient.Płec = (genderDigit % 2 == 0) ? 0 : 1;
+
+               
             }
             else
             {

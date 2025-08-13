@@ -15,12 +15,18 @@ namespace WebApplication2.Models
 
 
         [DisplayName("Imię")]
+        [RegularExpression(@"^[A-Za-zĄĆĘŁŃÓŚŻŹąćęłńóśżź]+$", ErrorMessage ="Imię może zawierać tylko litery.")]
+        [StringLength(50, ErrorMessage="Imię może mieć maksymalnie 50 znaków.")]
         public string Name { get; set; } = "";
 
         [DisplayName("Nazwisko")]
+        [RegularExpression(@"^[A-Za-zĄĆĘŁŃÓŚŻŹąćęłńóśżź]+$", ErrorMessage = "Nazwisko może zawierać tylko litery.")]
+        [StringLength(50, ErrorMessage = "Nazwisko może mieć maksymalnie 50 znaków.")]
+
         public string Surname { get; set; } = "";
 
         [DisplayName("PESEL")]
+        [RegularExpression(@"^[0-9]{11}$", ErrorMessage = "PESEL musi składać się z dokładnie 11 cyfr")]
         public string PESEL { get; set; } = "";
 
         [DisplayName("Rok Urodzenia")]

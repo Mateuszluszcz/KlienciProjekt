@@ -4,12 +4,10 @@
 
 <h2>Import / Export klientów</h2>
 
-<hr />
-
 <form asp-action="Import" method="post" enctype="multipart/form-data">
     <div class="mb-3">
         <label class="form-label">Wybierz format pliku:</label>
-        <select name="fileType" class="form-select" required>
+        <select name="fileType" id="fileType" class="form-select" required>
             <option value="xlsx">Excel (.xlsx)</option>
             <option value="csv">CSV (.csv)</option>
         </select>
@@ -17,13 +15,55 @@
 
     <div class="mb-3">
         <label class="form-label">Wybierz plik do importu:</label>
-        <input type="file" name="file" class="form-control" required />
+        <input type="file" name="file" id="file" class="form-control"
+               accept=".xlsx" required />
+        <span class="text-danger" id="fileError"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Importuj klientów</button>
 </form>
 
-<hr />
+
+<div class="mb-3">
+    <label class="form-label">Wybierz plik do importu:</label>
+    <input type="file" name="file" id="file" class="form-control"
+           accept=".xlsx" required />
+    <span class="text-danger" id="fileError"></span>
+</div>
+
+<script>
+    const fileTypeSelect = document.getElementById('fileType');
+    const fileInput = document.getElementById('file');
+    const fileError = document.getElementById('fileError');
+
+    fileTypeSelect.addEventListener('change', function () {
+        if (this.value === 'xlsx') {
+            fileInput.accept = '.xlsx';
+        } else if (this.value === 'csv') {
+            fileInput.accept = '.csv';
+        }
+        fileInput.value = '';
+        fileError.textContent = '';
+    });
+
+    fileInput.addEventListener('change', function () {
+        const selectedType = fileTypeSelect.value;
+        const allowedExt = selectedType;
+        const fileName = this.value.split('\\').pop();
+        const fileExt = fileName.split('.').pop().toLowerCase();
+
+        if (fileExt !== allowedExt) {
+            fileError.textContent = `Musisz wybrać plik z rozszerzeniem .${allowedExt}`;
+            this.value = '';
+        } else {
+            fileError.textContent = '';
+        }
+    });
+</script>
+
+
+
+
 
 <form asp-action="Export" method="get">
     <div class="mb-3">
@@ -36,3 +76,50 @@
 
     <button type="submit" class="btn btn-primary">Eksportuj klientów</button>
 </form>
+
+
+
+<!--<div class="mb-3">
+    <label class="form-label">Wybierz format pliku:</label>
+    <select name="fileType" id="fileType" class="form-select" required>
+        <option value="xlsx">Excel (.xlsx)</option>
+        <option value="csv">CSV (.csv)</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Wybierz plik do importu:</label>
+    <input type="file" name="file" id="file" class="form-control"
+           accept=".xlsx" required />
+    <span class="text-danger" id="fileError"></span>
+</div>
+
+<script>
+const fileTypeSelect = document.getElementById('fileType');
+const fileInput = document.getElementById('file');
+const fileError = document.getElementById('fileError');
+
+fileTypeSelect.addEventListener('change', function () {
+    if (this.value === 'xlsx') {
+        fileInput.accept = '.xlsx';
+    } else if (this.value === 'csv') {
+        fileInput.accept = '.csv';
+    }
+    fileInput.value = ''; 
+    fileError.textContent = '';
+});
+
+fileInput.addEventListener('change', function () {
+    const selectedType = fileTypeSelect.value;
+    const allowedExt = selectedType;
+    const fileName = this.value.split('\\').pop();
+    const fileExt = fileName.split('.').pop().toLowerCase();
+
+    if (fileExt !== allowedExt) {
+        fileError.textContent = `Musisz wybrać plik z rozszerzeniem .${allowedExt}`;
+        this.value = '';
+    } else {
+        fileError.textContent = '';
+    }
+});
+</script>-->

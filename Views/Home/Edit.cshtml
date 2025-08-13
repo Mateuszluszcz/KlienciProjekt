@@ -4,16 +4,22 @@
 <form asp-action="Edit" method="post">
     <input type="hidden" aps-for="ID" />
     <div class="mb-3 d-flex align-items-center">
-        <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;"></label>
-        <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" />
+  <label asp-for="Name" class=mb-3 style="width:75px; padding-top:10px;"> </label>
+            <input asp-for="Name" class="form-control" style="width:300px; " autocomplete="given-name" maxlength="50"
+            patern=[A-Za-zĄĆĘŁŃÓŚŻŹąćęłńóśżź]+ title="Imię może zawierać tylko litery." />
+            <span asp-validation-for="Name" class="text-danger" style="padding-left:10px" ></span>
     </div>
     <div class="mb-3 d-flex align-items-center">
-        <label asp-for="Surname" class=mb-3 style="width:75px; padding-top:10px;"></label>
-        <input asp-for="Surname" class="form-control" style="width:300px; " autocomplete="given-name" />
+        <label asp-for="Surname" class=mb-3 style="width:75px; padding-top:10px;"> </label>
+        <input asp-for="Surname" class="form-control" style="width:300px;" autocomplete="family-name" maxlength="50"
+               patern=[A-Za-zĄĆĘŁŃÓŚŻŹąćęłńóśżź]+ title="Nazwisko może zawierać tylko litery." />
+        <span asp-validation-for="Surname" class="text-danger" style="padding-left:10px"></span>
     </div>
     <div class="mb-3 d-flex align-items-center">
         <label asp-for="PESEL" class=mb-3 style="width:75px; padding-top:10px;"></label>
-        <input asp-for="PESEL" class="form-control" style="width:300px; " autocomplete="given-name" />
+        <input asp-for="PESEL" class="form-control" style="width:300px;" autocomplete="on" />
+        <pattern ="\d{11}" title="PESEL musi składać się z dokładnie 11 cyfr" />
+        <span asp-validation-for="PESEL" class="text-danger" style="padding-left:10px"></span>
     </div>
 
     <button type="submit" class="btn btn-success">Zapisz zmiany</button>
