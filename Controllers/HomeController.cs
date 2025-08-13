@@ -89,7 +89,7 @@ namespace WebApplication2.Controllers
 
 		[HttpPost]
 		[ValidateAntiForgeryToken]
-		public IActionResult Create(Klienci klient)
+		public async Task<IActionResult> Create(Klienci klient)
 		{
 			if (!ModelState.IsValid)
 				return View(klient);
@@ -103,11 +103,28 @@ namespace WebApplication2.Controllers
 			klient.BirthYear = birthYear;
 			klient.Płec = gender;
 
-			_context.Klienci.Add(klient);
-			_context.SaveChanges();
+			var existingClient = await _context.Klienci.FirstOrDefaultAsync(c => c.PESEL == klient.PESEL);
+			if (existingClient != null)
+			{
+				existingClient.Name = klient.Name;
+				existingClient.Surname = klient.Surname;
+				existingClient.BirthYear = birthYear;
+				existingClient.Płec = gender;
+
+				_context.Klienci.Update(existingClient);
+
+				//_context.Klienci.Remove(klient);
+			}
+			else
+			{
+				_context.Klienci.Add(klient);
+			}
+
+			await _context.SaveChangesAsync();
 
 			return RedirectToAction("Index");
 		}
+
 
 
 
@@ -152,28 +169,46 @@ namespace WebApplication2.Controllers
 			if (!ModelState.IsValid)
 				return View(model);
 
-			var klient = await _context.Klienci.FindAsync(id);
-			if (klient == null)
-				return NotFound();
-
-			klient.Name = model.Name;
-			klient.Surname = model.Surname;
-			klient.PESEL = model.PESEL;
-
-			if (!TryParsePesel(klient.PESEL, out int birthYear, out int gender))
+			if (!TryParsePesel(model.PESEL, out int birthYear, out int gender))
 			{
 				ModelState.AddModelError("PESEL", "Numer PESEL jest nieprawidłowy");
 				return View(model);
 			}
 
-			klient.BirthYear = birthYear;
-			klient.Płec = gender;
+			var klient = await _context.Klienci.FindAsync(id);
+			if (klient == null)
+				return NotFound();
 
-			_context.Klienci.Update(klient);
+			var existingClient = await _context.Klienci
+				.FirstOrDefaultAsync(c => c.PESEL == model.PESEL && c.ID != id);
+
+			if (existingClient != null)
+			{
+				existingClient.Name = model.Name;
+				existingClient.Surname = model.Surname;
+				existingClient.BirthYear = birthYear;
+				existingClient.Płec = gender;
+
+				_context.Klienci.Update(existingClient);
+
+				_context.Klienci.Remove(klient);
+			}
+			else
+			{
+				klient.Name = model.Name;
+				klient.Surname = model.Surname;
+				klient.PESEL = model.PESEL;
+				klient.BirthYear = birthYear;
+				klient.Płec = gender;
+
+				_context.Klienci.Update(klient);
+			}
+
 			await _context.SaveChangesAsync();
 
 			return RedirectToAction(nameof(Index));
 		}
+
 
 
 		private bool KlientExists(int id)
