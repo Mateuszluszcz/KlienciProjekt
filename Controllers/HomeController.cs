@@ -197,69 +197,100 @@ namespace WebApplication2.Controllers
         public IActionResult ImportExport()
         {
             return View();
-        }
+		}
+		//        if (!TryParsePesel(client.PESEL, out int birthYear, out int gender))
+		//{
+		//    continue; 
+		//}
 
-        [HttpPost]
-        public async Task<IActionResult> Import(IFormFile file, string fileType)
-        {
-            if (file == null || file.Length == 0)
-                return BadRequest("select a file");
+		//client.BirthYear = birthYear;
+		//client.Płec = gender;
 
-            var clients = new List<Klienci>();
+		[HttpPost]
+		public async Task<IActionResult> Import(IFormFile file, string fileType)
+		{
+			if (file == null || file.Length == 0)
+				return BadRequest("Select a file");
 
-            using (var stream = new MemoryStream())
-            {
-                await file.CopyToAsync(stream);
+			var clients = new List<Klienci>();
+			var invalidClients = new List<string>();
 
-                if (fileType == "xlsx")
-                {
-                    using var workbook = new XLWorkbook(stream);
-                    var worksheet = workbook.Worksheets.First();
-                    var rows = worksheet.RangeUsed().RowsUsed().Skip(1);
+			using (var stream = new MemoryStream())
+			{
+				await file.CopyToAsync(stream);
 
-                    foreach (var row in rows)
-                    {
-                        clients.Add(new Klienci
-                        {
-                            Name = row.Cell(1).GetValue<string>(),
-                            Surname = row.Cell(2).GetValue<string>(),
-                            PESEL = row.Cell(3).GetValue<string>(),
-                            BirthYear = row.Cell(4).GetValue<int>(),
-                            Płec = row.Cell(5).GetValue<int>()
-                        });
-                    }
-                }
-                else if (fileType == "csv")
-                {
-                    stream.Position = 0;
-                    using var reader = new StreamReader(stream, Encoding.UTF8);
-                    var csvLines = reader.ReadToEnd().Split('\n').Skip(1);
+				if (fileType == "xlsx")
+				{
+					using var workbook = new XLWorkbook(stream);
+					var worksheet = workbook.Worksheets.First();
+					var rows = worksheet.RangeUsed().RowsUsed().Skip(1);
 
-                    foreach (var line in csvLines)
-                    {
-                        var values = line.Split(',');
-                        if (values.Length >= 5 && !string.IsNullOrWhiteSpace(values[0]))
-                        {
-                            clients.Add(new Klienci
-                            {
-                                Name = values[0].Trim(),
-                                Surname = values[1].Trim(),
-                                PESEL = values[2].Trim(),
-                                BirthYear = int.Parse(values[3]),
-                                Płec = int.Parse(values[4])
-                            });
-                        }
-                    }
-                }
-            }
+					foreach (var row in rows)
+					{
+						var pesel = row.Cell(3).GetValue<string>().Trim();
+						if (!TryParsePesel(pesel, out int birthYear, out int gender))
+						{
+							invalidClients.Add($"{row.Cell(1).GetValue<string>()} {row.Cell(2).GetValue<string>()} - PESEL niepoprawny");
+							continue; 
+						}
 
-            _context.Klienci.AddRange(clients);
-            await _context.SaveChangesAsync();
+						clients.Add(new Klienci
+						{
+							Name = row.Cell(1).GetValue<string>(),
+							Surname = row.Cell(2).GetValue<string>(),
+							PESEL = pesel,
+							BirthYear = birthYear,
+							Płec = gender
+						});
+					}
+				}
+				else if (fileType == "csv")
+				{
+					stream.Position = 0;
+					using var reader = new StreamReader(stream, Encoding.UTF8);
+					var csvLines = reader.ReadToEnd().Split('\n').Skip(1);
 
-            return RedirectToAction("Index");
-        }
+					foreach (var line in csvLines)
+					{
+						var values = line.Split(',');
+						if (values.Length >= 3 && !string.IsNullOrWhiteSpace(values[0]))
+						{
+							var pesel = values[2].Trim();
+							if (!TryParsePesel(pesel, out int birthYear, out int gender))
+							{
+								invalidClients.Add($"{values[0].Trim()} {values[1].Trim()} - PESEL niepoprawny");
+								continue; 
+							}
 
-        [HttpGet]
+							clients.Add(new Klienci
+							{
+								Name = values[0].Trim(),
+								Surname = values[1].Trim(),
+								PESEL = pesel,
+								BirthYear = birthYear,
+								Płec = gender
+							});
+						}
+					}
+				}
+			}
+
+			if (clients.Count > 0)
+			{
+				_context.Klienci.AddRange(clients);
+				await _context.SaveChangesAsync();
+			}
+
+			if (invalidClients.Count > 0)
+			{
+				TempData["InvalidClients"] = string.Join("<br/>", invalidClients);
+			}
+
+			return RedirectToAction("Index");
+		}
+
+
+		[HttpGet]
         public async Task<IActionResult> Export(string fileType)
         {
             var clients = await _context.Klienci.ToListAsync();
