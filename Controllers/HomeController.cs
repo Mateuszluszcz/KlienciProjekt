@@ -265,7 +265,8 @@ namespace WebApplication2.Controllers
 						var pesel = row.Cell(3).GetValue<string>().Trim();
 						if (!TryParsePesel(pesel, out int birthYear, out int gender))
 						{
-							invalidClients.Add($"{row.Cell(1).GetValue<string>()} {row.Cell(2).GetValue<string>()} - PESEL niepoprawny");
+							invalidClients.Add($"{row.Cell(1).GetValue<string>()}" +
+								$" {row.Cell(2).GetValue<string>()} - PESEL niepoprawny");
 							continue;
 						}
 
