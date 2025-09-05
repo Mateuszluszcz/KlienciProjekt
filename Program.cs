@@ -7,8 +7,8 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
-//options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))); //render
-options.UseNpgsql("Host=localhost;Database=test2;Username=postgres;Password=123"));   //localhost
+options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection"))); //render
+//options.UseNpgsql("Host=localhost;Database=test2;Username=postgres;Password=123"));   //localhost
 
 builder.Services.AddControllersWithViews();
 
