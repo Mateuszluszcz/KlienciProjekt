@@ -11,7 +11,6 @@
 <p>
     <a href="@Url.Action("Create", "Home")" class=" btn btn-success"> Dodaj nowego klienta</a>
             <a href="@Url.Action("ImportExport", "Home")" class="btn btn-info mb-3;padding-top:10px;">Import / Export klientów</a>
-            <a asp-action="GenerateInvoice" class="btn btn-primary">Pobierz fakturę testową</a>
 
 </div>
 
@@ -38,6 +37,7 @@
                         <th style="width: 20%" class="text-center">PESEL</th>
                         <th style="width: 15%" class="text-center">Rok urodzenia</th>
                         <th style="width: 15%" class="text-center">Płeć</th>
+                        <th></th>
                         <th></th>
                         <th></th>
 
@@ -71,6 +71,13 @@
                                    class="btn btn-sm btn-outline-danger"
                                 onclick="return confirm('Czy na pewno chcesz usunąć?')" >Usuń</a>
                             </td>
+
+                            <td>
+                                <a asp-action="Print"
+                                   asp-route-id="@klient.ID"
+                                   class="btn btn-sm btn-outline-primary">Drukuj</a>
+                            </td>
+
 
                         </tr>
 

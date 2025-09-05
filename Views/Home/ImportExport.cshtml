@@ -23,14 +23,14 @@
     <button type="submit" class="btn btn-success">Importuj klientów</button>
 </form>
 
-
+<!--
 <div class="mb-3">
     <label class="form-label">Wybierz plik do importu:</label>
     <input type="file" name="file" id="file" class="form-control"
            accept=".xlsx" required />
     <span class="text-danger" id="fileError"></span>
 </div>
-
+-->
 <script>
     const fileTypeSelect = document.getElementById('fileType');
     const fileInput = document.getElementById('file');
@@ -62,7 +62,7 @@
 </script>
 
 
-<form asp-action="Export" method="get">
+<form asp-action="Export" method="get" style=" padding-top:100px">
     <div class="mb-3">
         <label class="form-label">Wybierz format eksportu:</label>
         <select name="fileType" class="form-select" required>

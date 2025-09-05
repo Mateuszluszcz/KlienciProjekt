@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@model WebApplication2.Models.Klienci
+
+<!DOCTYPE html>
 <html lang='pl'>
 <head>
     <meta charset='UTF-8'>
@@ -64,8 +66,8 @@
         </div>
         <div class='box'>
             <div class='box-title'>Nabywca</div>
-            ABC INFO Andrzej Kowalski<br/>
-            NIP: 2345683788<br/>
+            @Model.Name @Model.Surname<br/>
+            NIP: @Model.PESEL<br/>
             Nowakowska 12 / 5<br/>
             22-102 Góra Kalwaria
         </div>
@@ -145,3 +147,4 @@
 </body>
 </html>";
   
+
